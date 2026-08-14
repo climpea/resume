@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="李永慧 · Yonghui Li — 个人主页"
+    />
+    <title>李永慧 · Yonghui Li</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="atmosphere" aria-hidden="true">
+      <div class="atmosphere__wash"></div>
+      <div class="atmosphere__orb atmosphere__orb--a"></div>
+      <div class="atmosphere__orb atmosphere__orb--b"></div>
+      <div class="atmosphere__grain"></div>
+    </div>
+
+    <header class="site-header">
+      <a class="logo" href="#top" data-zh>李永慧</a>
+      <nav class="nav" aria-label="主导航">
+        <a href="#about">关于</a>
+        <a href="#work">经历</a>
+        <a href="#projects">作品</a>
+        <a href="#contact">联系</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-label="首页">
+        <div class="hero__copy">
+          <p class="hero__en" data-reveal>Yonghui Li</p>
+          <h1 class="hero__name" data-reveal data-reveal-delay="1">李永慧</h1>
+          <p class="hero__title" data-reveal data-reveal-delay="2"></p>
+          <p class="hero__tagline" data-reveal data-reveal-delay="3"></p>
+          <div class="hero__actions" data-reveal data-reveal-delay="4">
+            <a class="btn btn--primary" href="#work">查看经历</a>
+            <a class="btn btn--ghost" href="#contact">联系我</a>
+          </div>
+        </div>
+        <div class="hero__visual" aria-hidden="true" data-reveal data-reveal-delay="2">
+          <svg class="hero-mark" viewBox="0 0 640 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="plane" x1="80" y1="40" x2="560" y2="680" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#1F6F68" stop-opacity="0.55" />
+                <stop offset="0.55" stop-color="#2A4A52" stop-opacity="0.35" />
+                <stop offset="1" stop-color="#8FA89A" stop-opacity="0.2" />
+              </linearGradient>
+              <linearGradient id="ridge" x1="0" y1="420" x2="640" y2="620" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#14302C" stop-opacity="0.7" />
+                <stop offset="1" stop-color="#1F6F68" stop-opacity="0.25" />
+              </linearGradient>
+            </defs>
+            <rect width="640" height="720" fill="url(#plane)" />
+            <path d="M0 520 C120 470 200 560 320 500 C440 440 520 480 640 430 L640 720 L0 720 Z" fill="url(#ridge)" />
+            <path d="M0 580 C160 540 240 620 380 560 C500 510 560 540 640 510 L640 720 L0 720 Z" fill="#0F2421" fill-opacity="0.45" />
+            <circle cx="470" cy="210" r="54" fill="#E8F0EA" fill-opacity="0.55" />
+            <circle cx="470" cy="210" r="78" stroke="#E8F0EA" stroke-opacity="0.25" stroke-width="1.5" />
+            <path class="hero-mark__line" d="M90 180 C180 120 260 240 340 170 C420 100 500 150 560 120" stroke="#E8F0EA" stroke-opacity="0.45" stroke-width="1.25" />
+          </svg>
+        </div>
+      </section>
+
+      <section id="about" class="section about">
+        <div class="section__label" data-reveal>关于</div>
+        <div class="about__grid">
+          <h2 class="about__lead" data-reveal></h2>
+          <div class="about__side" data-reveal data-reveal-delay="1">
+            <p class="about__body"></p>
+            <ul class="skills" aria-label="技能"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="work" class="section work">
+        <div class="section__label" data-reveal>经历</div>
+        <h2 class="section__title" data-reveal>走过的路</h2>
+        <ol class="timeline"></ol>
+      </section>
+
+      <section id="projects" class="section projects">
+        <div class="section__label" data-reveal>作品</div>
+        <h2 class="section__title" data-reveal>精选项目</h2>
+        <ul class="project-list"></ul>
+      </section>
+
+      <section id="contact" class="section contact">
+        <div class="section__label" data-reveal>联系</div>
+        <h2 class="contact__title" data-reveal>一起聊聊新想法</h2>
+        <p class="contact__text" data-reveal data-reveal-delay="1">
+          欢迎就协作、产品或有意思的问题写信给我。
+        </p>
+        <div class="contact__actions" data-reveal data-reveal-delay="2">
+          <a class="btn btn--primary contact__email" href="#"></a>
+          <div class="contact__links"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span class="footer__name"></span>
+      <span class="footer__copy"></span>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
