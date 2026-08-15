@@ -18,7 +18,7 @@
  *    node scripts/fetch-fonts.mjs
  * ------------------------------------------------------------------
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -57,20 +57,25 @@ function parseFaces(css) {
   return faces
 }
 
-// 1) All CJK characters used anywhere in the repo -> text-subset Noto Serif SC.
+// 1) 递归收集 src/ 下所有源文件 + 页面/文档，提取全部 CJK 字符
+//    用于 text= 子集化 Noto Serif SC。
+function collectFiles(dir, acc = []) {
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry)
+    if (statSync(full).isDirectory()) collectFiles(full, acc)
+    else if (/\.(ts|tsx|js|mjs|css|html)$/.test(entry)) acc.push(full)
+  }
+  return acc
+}
+
 const scanFiles = [
-  'index.html',
-  'src/content.js',
-  'src/render.js',
-  'src/interactions.js',
-  'src/droplets.js',
-  'src/style.css',
-  'README.md',
+  join(root, 'index.html'),
+  ...collectFiles(join(root, 'src')),
+  join(root, 'README.md'),
 ]
 let all = ''
 for (const f of scanFiles) {
-  const p = join(root, f)
-  if (existsSync(p)) all += readFileSync(p, 'utf8')
+  if (existsSync(f)) all += readFileSync(f, 'utf8')
 }
 const chars = [
   ...new Set(all.match(/[\u2e80-\u9fff\uf900-\ufaff\uff00-\uffef]/g) || []),

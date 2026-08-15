@@ -1,40 +1,36 @@
 import {
   createDroplets,
   supportsHtmlInCanvas,
-} from './components/canvasui/DropletsVanilla.ts'
+} from './particles/DropletsVanilla'
+import { particles } from '../content'
 
 /**
- * Particle system bootstrap.
+ * 粒子系统装配（由 main.tsx 在 React 挂载前调用）。
  *
- * The droplets engine supports two render modes, selected by capability
- * detection — progressive enhancement, never a hard dependency:
+ * 引擎支持两种渲染模式，按能力检测自动选择（渐进增强，而非硬依赖）：
  *
- *   'capture' — full "rain on glass" refraction. Requires the experimental
- *               html-in-canvas API (drawElementImage + requestPaint, a
- *               Chromium flag / Origin Trial). The page scrolls inside a
- *               canvas and the shader refracts the captured content.
- *               Disabled on low-end devices and for reduced-motion users.
+ *   'capture' — 完整「雨滴玻璃」折射。需要实验性 html-in-canvas API
+ *               （drawElementImage + requestPaint）。页面在 canvas 内滚动，
+ *               着色器折射捕获到的内容。低端设备与 reduced-motion 用户跳过。
  *
- *   'overlay'  — same WebGL droplet shader rendered as a fixed glass layer
- *                over the normal DOM (the shader's uHasContent = 0 path).
- *                Works in any WebGL2 browser, content stays real DOM
- *                (accessible, selectable, SEO-friendly), scrolling is free.
+ *   'overlay' — 同一套 WebGL 雨滴着色器以固定玻璃层覆盖正常 DOM
+ *               （着色器 uHasContent = 0 路径）。任意 WebGL2 浏览器可用，
+ *               内容仍是真实 DOM（可选中、可读、SEO 友好），滚动零开销。
  *
- *   'none'     — no WebGL2 at all: plain page, no particles.
- *
- * @typedef {'capture' | 'overlay' | 'none'} DropletMode
+ *   'none'    — 无 WebGL2：普通页面，无粒子。
  */
 
-/** @type {import('./components/canvasui/DropletsVanilla').DropletsInstance | null} */
-let instance = null
-/** @type {DropletMode} */
-let mode = 'none'
+export type DropletMode = 'capture' | 'overlay' | 'none'
 
-export function getDropletMode() {
+/** @type {import('./particles/DropletsVanilla').DropletsInstance | null} */
+let instance: ReturnType<typeof createDroplets> = null
+let mode: DropletMode = 'none'
+
+export function getDropletMode(): DropletMode {
   return mode
 }
 
-function webgl2Available() {
+function webgl2Available(): boolean {
   try {
     const probe = document.createElement('canvas')
     const gl = probe.getContext('webgl2')
@@ -44,11 +40,12 @@ function webgl2Available() {
   }
 }
 
-/** Cheap heuristic: skip the expensive capture path on low-end devices. */
-function detectLowEnd() {
+/** 低端设备启发式：跳过昂贵的 capture 路径 */
+function detectLowEnd(): boolean {
   try {
+    const nav = navigator as Navigator & { deviceMemory?: number }
     const cores = navigator.hardwareConcurrency
-    const mem = navigator.deviceMemory
+    const mem = nav.deviceMemory
     if (typeof cores === 'number' && cores > 0 && cores < 4) return true
     if (typeof mem === 'number' && mem > 0 && mem < 4) return true
   } catch {
@@ -57,8 +54,9 @@ function detectLowEnd() {
   return false
 }
 
-const BASE_OPTIONS = {
-  // Light drizzle that fits the mist-atelier look.
+// 默认配置由 content.ts 的 particles 覆盖（数据驱动，调参无需改代码）。
+// 用 Object.assign 合并，避免 TS2783（字面量属性与已知键 spread 重叠）。
+const DEFAULTS = {
   intensity: 0.38,
   speed: 0.9,
   scale: 0.48,
@@ -75,15 +73,15 @@ const BASE_OPTIONS = {
   interactionStrength: 0.55,
   interactionDistortion: 2.4,
   // Soft champagne tint aligned with the dark page atmosphere.
-  tint: [0.96, 0.93, 0.85],
+  tint: [0.96, 0.93, 0.85] as [number, number, number],
   tintStrength: 0.1,
 }
+const BASE_OPTIONS = Object.assign({}, DEFAULTS, particles)
 
 /**
- * Mount the droplet particles over the page shell.
- * Falls back through capture -> overlay -> plain page.
+ * 挂载雨滴粒子。降级链：capture → overlay → 普通页面。
  */
-export function mountDroplets(options = {}) {
+export function mountDroplets(options: Partial<typeof BASE_OPTIONS> = {}) {
   const root = document.getElementById('particle-root')
   const content = document.getElementById('scroll-root')
   if (!root || !content) return null
@@ -119,7 +117,7 @@ export function mountDroplets(options = {}) {
     if (source.contains(content)) root.insertBefore(content, source)
   }
 
-  // ---- capture mode: page lives inside the source canvas -------------
+  // ---- capture 模式：页面被移入源 canvas ----
   if (canCapture) {
     root.insertBefore(source, content)
     source.appendChild(content)
@@ -132,11 +130,11 @@ export function mountDroplets(options = {}) {
       mode = 'capture'
       return instance
     }
-    // GL 初始化失败：清理后继续尝试 overlay 模式，而不是直接放弃粒子。
+    // GL 初始化失败：清理后继续尝试 overlay 模式
     fail()
   }
 
-  // ---- overlay mode: fixed glass layer over the normal page ------------
+  // ---- overlay 模式：固定玻璃层覆盖正常 DOM ----
   root.appendChild(output)
   root.classList.add('is-active')
   document.documentElement.classList.add('overlay-particle')
@@ -145,8 +143,7 @@ export function mountDroplets(options = {}) {
     { source, content, output },
     {
       ...config,
-      // Without captured content there is nothing to refract; raise the
-      // tint slightly so the overlay drops read as soft champagne mist.
+      // 无捕获内容可折射；提高 tint 让水滴呈现香槟雾色而非灰点
       tint: [0.98, 0.96, 0.9],
       tintStrength: 0.3,
     },
@@ -160,11 +157,11 @@ export function mountDroplets(options = {}) {
 }
 
 /**
- * Which element scrolls the page:
- *  - capture mode: the content element inside the canvas
- *  - overlay / none / fallback: the window
+ * 哪个元素在滚动页面：
+ *  - capture 模式：canvas 内的内容元素
+ *  - overlay / none / fallback：window
  */
-export function getScrollRoot() {
+export function getScrollRoot(): HTMLElement | null {
   return mode === 'capture' ? document.getElementById('scroll-root') : null
 }
 
