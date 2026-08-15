@@ -6,7 +6,7 @@ import type { Repo, RepoAnalysis } from '../lib/github'
 import { SectionHead } from './SectionHead'
 
 export function OpenSource() {
-  const { profile: ghProfile, repos, analysis, rate, status, error, refreshing, refresh, meta } = useGitHub()
+  const { profile: ghProfile, repos, analysis, rate, error, refreshing, refresh, meta } = useGitHub()
 
   return (
     <section id="open-source" className="section oss">
@@ -73,7 +73,8 @@ export function OpenSource() {
         </ul>
       )}
 
-      {(error || status === 'ratelimited') && <p className="oss__state">{error || 'GitHub 请求过于频繁，已保留上次数据。'}</p>}
+      {/* 无数据时才醒目提示；有数据时工具栏已显示同步状态 */}
+      {repos === null && error && <p className="oss__state">{error}</p>}
     </section>
   )
 }

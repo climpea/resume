@@ -1,27 +1,28 @@
 /**
- * useGitHub — 开源区块状态管理（SWR + 自动刷新 + README 分析）。
+ * useGitHub — 开源区块状态管理。
+ *
+ * 数据来源：构建期由 scripts/fetch-github-data.mjs 预取生成的静态 JSON
+ * （public/github-data.json，CI 每 6 小时自动重建）。运行时**不调用**
+ * GitHub API —— 配额消耗归零，访客与预览页面都只加载静态文件。
+ *
+ * 仍然保留 SWR 体验：sessionStorage 缓存即时首屏 + 后台重新校验 JSON；
+ * “刷新”按钮只是重新拉取静态文件（不消耗任何配额）。
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { github as githubConfig, profile } from '../content'
-import {
-  analyzeRepos,
-  cacheRead,
-  cacheWrite,
-  fetchAllRepos,
-  formatRelative,
-  isRateLimitError,
-  LIST_CACHE_KEY,
-  LIST_TTL,
-  resolveUsername,
-  sortAndFilter,
-  topLanguage,
-} from '../lib/github'
+import { cacheRead, cacheWrite, formatRelative, LIST_CACHE_KEY, LIST_TTL, topLanguage } from '../lib/github'
 import type { GithubProfile, Repo, RepoAnalysis } from '../lib/github'
 
-const REFRESH_INTERVAL = 5 * 60 * 1000
-const USERNAME = resolveUsername(githubConfig.username, profile.links.github)
+const REFRESH_INTERVAL = 10 * 60 * 1000 // 重新校验 JSON 的周期
+const DATA_URL = `${import.meta.env.BASE_URL}github-data.json`
 
-export type GitHubStatus = 'loading' | 'ready' | 'error' | 'ratelimited' | 'empty'
+export type GitHubStatus = 'loading' | 'ready' | 'error' | 'empty'
+
+interface GitHubData {
+  fetchedAt: string
+  profile: GithubProfile | null
+  repos: Repo[]
+  analysis: Record<string, RepoAnalysis>
+}
 
 export interface GitHubState {
   profile: GithubProfile | null
@@ -41,52 +42,33 @@ export interface GitHubState {
 }
 
 export function useGitHub(): GitHubState {
-  const [profileData, setProfileData] = useState<GithubProfile | null>(null)
-  const [repos, setRepos] = useState<Repo[] | null>(null)
-  const [analysis, setAnalysis] = useState<Record<string, RepoAnalysis>>({})
-  const [rate, setRate] = useState('正在连接 GitHub…')
+  const [data, setData] = useState<GitHubData | null>(null)
+  const [rate, setRate] = useState('正在加载…')
   const [status, setStatus] = useState<GitHubStatus>('loading')
   const [error, setError] = useState('')
   const [refreshing, setRefreshing] = useState(false)
   const busyRef = useRef(false)
 
-  const refresh = useCallback(async () => {
-    if (busyRef.current || !USERNAME) return
+  const load = useCallback(async () => {
+    if (busyRef.current) return
     busyRef.current = true
     setRefreshing(true)
     try {
-      const { profile: p, repos: list, rate: rateInfo } = await fetchAllRepos(USERNAME)
-      const sorted = sortAndFilter(list, githubConfig)
-      cacheWrite(LIST_CACHE_KEY, { profile: p, repos: sorted }, sessionStorage)
-      setProfileData(p)
-      setRepos(sorted)
+      const res = await fetch(DATA_URL, { cache: 'no-store' })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const json = (await res.json()) as GitHubData
+      if (!Array.isArray(json.repos) || typeof json.fetchedAt !== 'string') {
+        throw new Error('invalid data file')
+      }
+      cacheWrite(LIST_CACHE_KEY, json, sessionStorage)
+      setData(json)
       setError('')
-      setStatus(sorted.length ? 'ready' : 'empty')
-      setRate(`已同步 · 配额 ${rateInfo.remaining}/${rateInfo.limit}`)
-
-      // README 一句话 + 技术栈 + 语言占比（渐进填充）
-      try {
-        await analyzeRepos(USERNAME, sorted, githubConfig.summaries, (name, a) => {
-          setAnalysis((prev) => ({ ...prev, [name]: a }))
-        })
-      } catch (err) {
-        if (isRateLimitError(err)) {
-          const mins = Math.max(Math.ceil((err.reset - Date.now()) / 60000), 1)
-          setRate(`配额已用完 · ${mins} 分钟后恢复`)
-          setStatus('ratelimited')
-        }
-      }
+      setStatus(json.repos.length ? 'ready' : 'empty')
+      setRate(json.fetchedAt ? `数据更新于 ${formatRelative(json.fetchedAt)} · 定时同步` : '暂无数据')
     } catch (err) {
-      if (isRateLimitError(err)) {
-        const mins = Math.max(Math.ceil((err.reset - Date.now()) / 60000), 1)
-        setRate(`配额已用完 · ${mins} 分钟后恢复`)
-        setStatus('ratelimited')
-        setError('GitHub 请求过于频繁，已保留上次数据，稍后可手动刷新。')
-      } else {
-        setRate('同步失败')
-        setStatus('error')
-        setError('GitHub 暂时无法连接，请稍后重试。')
-      }
+      setStatus('error')
+      setError('GitHub 数据加载失败，请稍后重试。')
+      setRate('同步失败')
     } finally {
       busyRef.current = false
       setRefreshing(false)
@@ -94,51 +76,48 @@ export function useGitHub(): GitHubState {
   }, [])
 
   useEffect(() => {
-    // SWR：先渲染缓存（若新鲜），再后台刷新
-    const cached = cacheRead<{ profile: GithubProfile; repos: Repo[] }>(LIST_CACHE_KEY, LIST_TTL, sessionStorage)
+    // 先渲染缓存（若有），再后台重新校验静态 JSON（零配额）
+    const cached = cacheRead<GitHubData>(LIST_CACHE_KEY, LIST_TTL, sessionStorage)
     if (cached) {
-      setProfileData(cached.data.profile)
-      setRepos(cached.data.repos)
+      setData(cached.data)
       setStatus(cached.data.repos.length ? 'ready' : 'empty')
-      setRate('已加载缓存 · 后台同步中…')
-      analyzeRepos(USERNAME, cached.data.repos, githubConfig.summaries, (name, a) => {
-        setAnalysis((prev) => ({ ...prev, [name]: a }))
-      }).catch(() => {})
+      setRate(cached.data.fetchedAt ? `数据更新于 ${formatRelative(cached.data.fetchedAt)}` : '暂无数据')
     }
-    refresh()
+    load()
 
     const timer = window.setInterval(() => {
-      if (!document.hidden) refresh()
+      if (!document.hidden) load()
     }, REFRESH_INTERVAL)
     const onVisibility = () => {
-      if (!document.hidden) refresh()
+      if (!document.hidden) load()
     }
     document.addEventListener('visibilitychange', onVisibility, { passive: true })
     return () => {
       window.clearInterval(timer)
       document.removeEventListener('visibilitychange', onVisibility)
     }
-  }, [refresh])
+  }, [load])
 
-  const list = repos ?? []
+  const list = data?.repos ?? []
   const meta = {
-    years: Math.max(new Date().getFullYear() - (profileData ? new Date(profileData.createdAt).getFullYear() : new Date().getFullYear()), 0),
+    years: Math.max(
+      new Date().getFullYear() -
+        (data?.profile ? new Date(data.profile.createdAt).getFullYear() : new Date().getFullYear()),
+      0,
+    ),
     topLang: topLanguage(list),
     latest: list.reduce((acc, r) => (r.pushedAt > acc ? r.pushedAt : acc), ''),
   }
 
   return {
-    profile: profileData,
-    repos,
-    analysis,
+    profile: data?.profile ?? null,
+    repos: data ? data.repos : null,
+    analysis: data?.analysis ?? {},
     rate,
     status,
     error,
     refreshing,
-    refresh,
+    refresh: load,
     meta,
   }
 }
-
-/** 供组件直接使用的格式化（避免重复 import 链） */
-export { formatRelative }

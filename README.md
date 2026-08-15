@@ -37,25 +37,31 @@ src/
     particles/DropletsVanilla.ts  WebGL 雨滴引擎
     scroll.ts           锚点平滑滚动工具
   style.css / fonts.css 样式与自托管字体 @font-face
+  public/github-data.json  构建期预取的 GitHub 快照（运行时只读它）
 scripts/
-  fetch-fonts.mjs       拉取并子集化字体（递归扫描 src，见下）
+  fetch-fonts.mjs       拉取并子集化字体（递归扫描 src + 数据文件，见下）
+  fetch-github-data.mjs 预取 GitHub 数据生成静态 JSON（见下）
 ```
 
 **约定**：组件只负责展示，副作用一律进 hooks，可测逻辑一律进 lib。
 
-### GitHub 仓库实时拉取 + README 分析（`lib/github.ts` + `hooks/useGitHub.ts`）
+### GitHub 数据：构建期预取，运行时零配额（`scripts/fetch-github-data.mjs`）
 
-「开源」区块直接调用 GitHub 公开 API（无需 Token），工程要点：
+**架构**：站点运行时**不再调用 GitHub API** —— `scripts/fetch-github-data.mjs`
+在构建/CI 时用 GITHUB_TOKEN（配额 1000 次/小时）预取仓库、README、语言占比，
+计算好一句话总结与技术栈，生成 `public/github-data.json`；页面只加载这个
+静态文件。**访客与预览页面零 API 消耗，配额问题彻底消失**，语言占比也不用牺牲。
 
-- **SWR**：优先渲染 sessionStorage 缓存（5 分钟 TTL），后台静默刷新，首屏即时、数据尽量新；
-- **自动刷新**：每 5 分钟一次，页面隐藏时暂停，回到前台立即补拉；另有手动刷新按钮；
-- **配额感知**：读取 `X-RateLimit-*` 响应头，未登录配额为 60 次/小时/IP，耗尽时显示恢复倒计时并保留缓存数据；
-- **README 分析**：每个仓库额外拉取 README 与语言占比，产出：
-  - 一句话总结 —— 启发式提取 README 首个有效段落 / 「简介」小节（去代码块、徽章、表格），优先级：`content.ts` 的 `github.summaries` 人工精选 > README 提取 > 仓库描述；
-  - 技术栈 chips —— 主语言 + topics + README 关键词扫描；
-  - 语言占比条 —— `/languages` 接口的真实字节占比分析；
-  - README / 语言数据变化极慢，localStorage 长缓存（6h / 24h），且并发限制 2，避免打爆配额；无 README 的仓库自动降级；
-- **配置**：`src/content.ts` 的 `github` 字段可调整 username、排序、置顶（featured）、排除（exclude）、一句话精选（summaries）等。
+- **数据新鲜度**：`.github/workflows/deploy.yml` 定时（每 6 小时）重建部署；
+  本地想刷新数据执行 `npm run github:data`；
+- **复用同一套逻辑**：预取脚本直接复用 `lib/github.ts` 的纯函数与拉取管线
+  （Node 原生 import TS），浏览器与 CI 行为一致；
+- **运行时**：`hooks/useGitHub` 加载 JSON（sessionStorage 缓存即时首屏 +
+  后台重新校验），刷新按钮只是重拉静态文件；
+- **容错**：预取失败不阻断部署（保留旧数据文件）；数据文件缺失时页面给出
+  明确提示；
+- **配置**：`src/content.ts` 的 `github` 字段（username、exclude、featured、
+  summaries、`skipReadmeWhenDescribed` 等）同时作用于预取脚本与展示。
 
 ### 粒子特效：三种模式（渐进增强）
 

@@ -70,6 +70,7 @@ function collectFiles(dir, acc = []) {
 
 const scanFiles = [
   join(root, 'index.html'),
+  join(root, 'public', 'github-data.json'), // 动态数据（仓库描述等）也要覆盖进字库子集
   ...collectFiles(join(root, 'src')),
   join(root, 'README.md'),
 ]

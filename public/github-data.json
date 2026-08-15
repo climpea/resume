@@ -1,0 +1,63 @@
+{
+  "fetchedAt": "2026-08-15T06:35:04.038Z",
+  "profile": {
+    "publicRepos": 3,
+    "createdAt": "2023-09-01T03:40:16Z"
+  },
+  "repos": [
+    {
+      "name": "focus_training",
+      "url": "https://github.com/climpea/focus_training",
+      "description": "基于微信小游戏 Canvas 2D 的专注力训练应用，包含六种认知训练模块，适用于视觉搜索、抗干扰、记忆与动态感知等能力练习。",
+      "language": "JavaScript",
+      "stars": 0,
+      "forks": 0,
+      "pushedAt": "2026-08-15T06:15:59Z",
+      "archived": false,
+      "fork": false,
+      "topics": []
+    },
+    {
+      "name": "mock_assistant",
+      "url": "https://github.com/climpea/mock_assistant",
+      "description": "Chrome 浏览器插件，用于在侧边栏中查看页面接口请求，并一键 Mock 返回数据，方便前端联调与异常场景验证。",
+      "language": "TypeScript",
+      "stars": 0,
+      "forks": 0,
+      "pushedAt": "2026-08-15T04:52:09Z",
+      "archived": false,
+      "fork": false,
+      "topics": []
+    }
+  ],
+  "analysis": {
+    "focus_training": {
+      "summary": "基于微信小游戏 Canvas 2D 的专注力训练应用，包含六种认知训练模块，适用于视觉搜索、抗干扰、记忆与动态感知等能力练习。",
+      "stack": [
+        "JavaScript"
+      ],
+      "langbar": [
+        {
+          "lang": "JavaScript",
+          "pct": 100
+        }
+      ]
+    },
+    "mock_assistant": {
+      "summary": "Chrome 浏览器插件，用于在侧边栏中查看页面接口请求，并一键 Mock 返回数据，方便前端联调与异常场景验证。",
+      "stack": [
+        "TypeScript"
+      ],
+      "langbar": [
+        {
+          "lang": "TypeScript",
+          "pct": 91.10830656264342
+        },
+        {
+          "lang": "CSS",
+          "pct": 8.377040582180555
+        }
+      ]
+    }
+  }
+}

@@ -64,6 +64,8 @@ export interface GithubConfig {
   maxRepos: number
   featured: string[]
   sort?: 'updated' | 'stars'
+  /** 有完整描述的仓库跳过 README 拉取（省配额，默认 true） */
+  skipReadmeWhenDescribed?: boolean
   /** 一句话简介：优先用这里手写的（最准），没有则自动从 README 提取 */
   summaries: Record<string, string>
 }
@@ -75,6 +77,7 @@ export const github: GithubConfig = {
   exclude: ['resume'], // 排除指定仓库名（如当前简历仓库本身）
   maxRepos: 20, // 最多展示数量
   featured: [], // 需要置顶的仓库名（可选，按顺序排最前）
+  skipReadmeWhenDescribed: true, // 有完整描述（≥10 字）的仓库跳过 README 拉取，省配额
   // 适合 README 缺失或 README 是模板文案的仓库：
   // summaries: { 'focus_training': '一句话说明这个项目干什么' },
   summaries: {},

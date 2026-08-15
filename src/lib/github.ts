@@ -58,10 +58,19 @@ export function isRateLimitError(err: unknown): err is RateLimitError {
 
 const API = 'https://api.github.com'
 
+/** CI 预取脚本注入的 Token（浏览器端不设置，保持匿名） */
+let authToken = ''
+export function setGithubToken(token: string) {
+  authToken = token
+}
+
 export const LIST_CACHE_KEY = 'gh-repos-v1'
-export const LIST_TTL = 5 * 60 * 1000
+export const LIST_TTL = 10 * 60 * 1000 // 列表缓存有效期（10 分钟，降频省配额）
 export const README_TTL = 6 * 60 * 60 * 1000
 export const LANGS_TTL = 24 * 60 * 60 * 1000
+
+/** 描述达到该长度即视为“有完整描述”，可跳过 README 拉取 */
+export const DESC_MIN_LEN = 10
 
 /** 常用语言色（GitHub linguist 配色子集），未知语言回退中性色 */
 export const LANG_COLORS: Record<string, string> = {
@@ -271,6 +280,21 @@ export function parseLanguagesBreakdown(bytes: Record<string, number> | null | u
     .filter((x) => x.pct >= 1)
 }
 
+/**
+ * 一句话总结优先级：人工精选 > 完整描述 > README 提取 > 短描述。
+ * 完整描述直接可用时无需为它拉 README，省 1 次请求。
+ */
+export function pickSummary(curated: string, description: string, readme: string): string {
+  const described = description.length >= DESC_MIN_LEN
+  return curated || (described ? description : '') || (readme ? extractSummary(readme) : '') || description
+}
+
+/** 是否需要拉取 README：仅当没有精选、描述又不完整时才需要 */
+export function shouldFetchReadme(curated: string, description: string, skipWhenDescribed: boolean): boolean {
+  if (!skipWhenDescribed) return true
+  return !curated && description.length < DESC_MIN_LEN
+}
+
 /* ================= 缓存 ================= */
 
 interface CacheEntry<T> {
@@ -301,8 +325,10 @@ export function cacheWrite<T>(key: string, data: T, storage: Storage) {
 /* ================= 拉取 ================= */
 
 async function fetchJSON(path: string): Promise<{ data: any; rate: RateInfo }> {
+  const headers: Record<string, string> = { Accept: 'application/vnd.github+json' }
+  if (authToken) headers.Authorization = `Bearer ${authToken}`
   const res = await fetch(`${API}${path}`, {
-    headers: { Accept: 'application/vnd.github+json' },
+    headers,
     cache: 'no-store',
   })
   const rate: RateInfo = {
@@ -352,10 +378,9 @@ export async function fetchAllRepos(username: string): Promise<{
 }
 
 async function fetchRaw(path: string): Promise<Response> {
-  return fetch(`${API}${path}`, {
-    headers: { Accept: 'application/vnd.github.raw' },
-    cache: 'no-store',
-  })
+  const headers: Record<string, string> = { Accept: 'application/vnd.github.raw' }
+  if (authToken) headers.Authorization = `Bearer ${authToken}`
+  return fetch(`${API}${path}`, { headers, cache: 'no-store' })
 }
 
 function throwIfRateLimited(res: Response): void {
@@ -367,30 +392,40 @@ function throwIfRateLimited(res: Response): void {
 }
 
 /** 单个仓库：README（raw）+ 语言占比，均走长缓存；配额耗尽抛错中止 */
-async function analyzeOne(username: string, repo: Repo, summaries: Record<string, string>): Promise<RepoAnalysis> {
+async function analyzeOne(
+  username: string,
+  repo: Repo,
+  summaries: Record<string, string>,
+  skipReadmeWhenDescribed: boolean,
+): Promise<RepoAnalysis> {
   const result: RepoAnalysis = { summary: '', stack: [], langbar: [] }
-  const readmeCache = cacheRead<{ text: string }>(`gh-readme-${repo.name}`, README_TTL, localStorage)
-  let readme = readmeCache ? readmeCache.data.text : ''
-  if (!readmeCache) {
-    try {
-      const res = await fetchRaw(`/repos/${username}/${repo.name}/readme`)
-      throwIfRateLimited(res)
-      if (res.status === 404) {
-        cacheWrite(`gh-readme-${repo.name}`, { text: '' }, localStorage)
-      } else if (res.ok) {
-        readme = await res.text()
-        cacheWrite(`gh-readme-${repo.name}`, { text: readme }, localStorage)
+  const curated = summaries[repo.name] || ''
+
+  // 一句话总结可满足时（精选或完整描述），跳过 README 拉取省配额
+  let readme = ''
+  if (shouldFetchReadme(curated, repo.description, skipReadmeWhenDescribed)) {
+    const readmeCache = cacheRead<{ text: string }>(`gh-readme-${repo.name}`, README_TTL, localStorage)
+    readme = readmeCache ? readmeCache.data.text : ''
+    if (!readmeCache) {
+      try {
+        const res = await fetchRaw(`/repos/${username}/${repo.name}/readme`)
+        throwIfRateLimited(res)
+        if (res.status === 404) {
+          cacheWrite(`gh-readme-${repo.name}`, { text: '' }, localStorage)
+        } else if (res.ok) {
+          readme = await res.text()
+          cacheWrite(`gh-readme-${repo.name}`, { text: readme }, localStorage)
+        }
+      } catch (err) {
+        if (isRateLimitError(err)) throw err
+        /* 网络抖动：静默，走缓存/空 */
       }
-    } catch (err) {
-      if (isRateLimitError(err)) throw err
-      /* 网络抖动：静默，走缓存/空 */
     }
   }
 
-  // 一句话总结：人工精选 > README 提取 > 仓库描述
-  result.summary = summaries[repo.name] || (readme ? extractSummary(readme) : '') || repo.description || ''
+  result.summary = pickSummary(curated, repo.description, readme)
 
-  // 技术栈：主语言 + topics + README 关键词（去重）
+  // 技术栈：主语言 + topics +（拉取了 README 才有）关键词（去重）
   const stackSet = new Set<string>()
   if (repo.language) stackSet.add(repo.language)
   for (const t of repo.topics) stackSet.add(t)
@@ -404,7 +439,7 @@ async function analyzeOne(username: string, repo: Repo, summaries: Record<string
   } else {
     try {
       const res = await fetch(`${API}/repos/${username}/${repo.name}/languages`, {
-        headers: { Accept: 'application/vnd.github+json' },
+        headers: { Accept: 'application/vnd.github+json', ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
         cache: 'no-store',
       })
       throwIfRateLimited(res)
@@ -428,11 +463,12 @@ export async function analyzeRepos(
   username: string,
   repos: Repo[],
   summaries: Record<string, string>,
+  skipReadmeWhenDescribed: boolean,
   onProgress?: (name: string, analysis: RepoAnalysis) => void,
 ): Promise<Map<string, RepoAnalysis>> {
   const map = new Map<string, RepoAnalysis>()
   await mapLimit(repos, 2, async (repo) => {
-    const analysis = await analyzeOne(username, repo, summaries)
+    const analysis = await analyzeOne(username, repo, summaries, skipReadmeWhenDescribed)
     map.set(repo.name, analysis)
     onProgress?.(repo.name, analysis)
   })
