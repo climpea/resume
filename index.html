@@ -1,114 +1,195 @@
 <!doctype html>
 <html lang="zh-CN">
   <head>
+    <script>
+      // 在 CSS 生效前标记 JS 可用：html.js 才隐藏 [data-reveal] 元素，
+      // 保证禁用 JS 时内容始终可见（渐进增强，而非以 JS 为前提）。
+      document.documentElement.classList.add('js')
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="李永慧 · Yonghui Li — 个人主页"
-    />
-    <title>李永慧 · Yonghui Li</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="description" content="李永慧 · Yonghui Li — 前端工程师，多端统一 / 低代码 / AI 应用落地经验。" />
+    <meta name="theme-color" content="#0b0d0c" />
+    <link rel="canonical" href="https://climpea.github.io/resume/" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content="李永慧 · Yonghui Li — 前端工程师" />
+    <meta property="og:description" content="把复杂的业务，收敛成上线可用的产品。多端统一、低代码与 AI 应用的三线落地经验。" />
+    <meta property="og:url" content="https://climpea.github.io/resume/" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta name="twitter:card" content="summary" />
+
+    <!-- 结构化数据：方便搜索引擎理解人物信息 -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "李永慧",
+        "alternateName": "Yonghui Li",
+        "jobTitle": "前端工程师",
+        "email": "mailto:lyh2830@163.com",
+        "telephone": "+86-15750398278",
+        "address": { "@type": "PostalAddress", "addressLocality": "北京" },
+        "url": "https://climpea.github.io/resume/",
+        "sameAs": ["https://github.com/climpea"]
+      }
+    </script>
+
+    <title>李永慧 · Yonghui Li — 前端工程师</title>
   </head>
   <body>
-    <div class="atmosphere" aria-hidden="true">
-      <div class="atmosphere__wash"></div>
-      <div class="atmosphere__orb atmosphere__orb--a"></div>
-      <div class="atmosphere__orb atmosphere__orb--b"></div>
-      <div class="atmosphere__grain"></div>
+    <a class="skip-link" href="#top">跳到主要内容</a>
+    <div class="scroll-progress" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <noscript>
+      <div class="noscript-note">
+        <p><strong>李永慧 · Yonghui Li</strong> — 前端工程师（北京）</p>
+        <p>邮箱：lyh2830@163.com · GitHub：github.com/climpea</p>
+        <p>本页面需要启用 JavaScript 以完整渲染，核心信息如上。</p>
+      </div>
+    </noscript>
+
+    <div id="particle-root" class="particle-scroll">
+      <div id="scroll-root" class="particle-scroll__content">
+        <div class="atmosphere" aria-hidden="true">
+          <div class="atmosphere__glow atmosphere__glow--a"></div>
+          <div class="atmosphere__glow atmosphere__glow--b"></div>
+          <div class="atmosphere__grid"></div>
+        </div>
+
+        <header class="site-header">
+          <a class="logo" href="#top">李永慧<span class="logo__dot">.</span></a>
+          <nav class="nav" aria-label="主导航">
+            <a href="#about">关于</a>
+            <a href="#work">经历</a>
+            <a href="#projects">作品</a>
+            <a href="#contact">联系</a>
+          </nav>
+          <span class="header-status" aria-hidden="true">
+            <span class="header-status__dot"></span>求职中
+          </span>
+        </header>
+
+        <main id="top" tabindex="-1">
+          <!-- —— Hero —— -->
+          <section class="hero" aria-label="首页">
+            <div class="hero__spotlight" aria-hidden="true"></div>
+            <div class="hero__meta" data-reveal>
+              <span>PORTFOLIO — 2025</span>
+              <span class="hero__meta-dot" aria-hidden="true">·</span>
+              <span>BEIJING, CN</span>
+              <span class="hero__meta-dot" aria-hidden="true">·</span>
+              <span>WEB FRONT-END</span>
+            </div>
+
+            <h1 class="hero__title">
+              <span class="hero__en hero__en--solid" data-reveal>YONGHUI</span>
+              <span class="hero__row" data-reveal data-reveal-delay="1">
+                <span class="hero__en hero__en--ghost">LI</span>
+                <span class="hero__zh">李永慧</span>
+              </span>
+            </h1>
+
+            <div class="hero__side" aria-hidden="true" data-reveal data-reveal-delay="2">
+              <svg class="hero__badge" viewBox="0 0 120 120">
+                <defs>
+                  <path id="badge-circle" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
+                </defs>
+                <text class="hero__badge-text">
+                  <textPath href="#badge-circle">OPEN TO WORK · 前端工程师 · OPEN TO WORK ·</textPath>
+                </text>
+                <circle class="hero__badge-center" cx="60" cy="60" r="6" />
+              </svg>
+            </div>
+
+            <div class="hero__foot">
+              <div class="hero__copy">
+                <p class="hero__tagline" data-reveal data-reveal-delay="3"></p>
+                <p class="hero__subtitle" data-reveal data-reveal-delay="3"></p>
+              </div>
+              <div class="hero__actions" data-reveal data-reveal-delay="4">
+                <a class="btn btn--primary" href="#work">查看经历</a>
+                <a class="btn btn--ghost" href="#contact">联系我</a>
+              </div>
+            </div>
+
+            <div class="hero__scrollhint" aria-hidden="true" data-reveal data-reveal-delay="4">
+              <span>SCROLL</span>
+              <span class="hero__scrollhint-line"></span>
+            </div>
+          </section>
+
+          <!-- —— Marquee —— -->
+          <div class="marquee" aria-hidden="true">
+            <div class="marquee__track" id="marquee-track"></div>
+          </div>
+
+          <!-- —— About —— -->
+          <section id="about" class="section about">
+            <div class="section__head">
+              <span class="section__index" data-reveal>01</span>
+              <span class="section__rule" data-reveal></span>
+              <span class="section__label" data-reveal>关于</span>
+            </div>
+            <div class="about__grid">
+              <h2 class="about__lead" data-reveal></h2>
+              <div class="about__side" data-reveal data-reveal-delay="1">
+                <p class="about__body"></p>
+                <div class="skill-groups" aria-label="技能"></div>
+              </div>
+            </div>
+            <dl class="stats" aria-label="关键成果"></dl>
+          </section>
+
+          <!-- —— Work —— -->
+          <section id="work" class="section work">
+            <div class="section__head">
+              <span class="section__index" data-reveal>02</span>
+              <span class="section__rule" data-reveal></span>
+              <span class="section__label" data-reveal>经历</span>
+            </div>
+            <h2 class="section__title" data-reveal>走过的路</h2>
+            <ol class="timeline"></ol>
+          </section>
+
+          <!-- —— Projects —— -->
+          <section id="projects" class="section projects">
+            <div class="section__head">
+              <span class="section__index" data-reveal>03</span>
+              <span class="section__rule" data-reveal></span>
+              <span class="section__label" data-reveal>作品</span>
+            </div>
+            <h2 class="section__title" data-reveal>精选项目</h2>
+            <ul class="project-grid"></ul>
+          </section>
+
+          <!-- —— Contact —— -->
+          <section id="contact" class="section contact">
+            <div class="contact__watermark" aria-hidden="true">LET'S TALK</div>
+            <div class="section__head">
+              <span class="section__index" data-reveal>04</span>
+              <span class="section__rule" data-reveal></span>
+              <span class="section__label" data-reveal>联系</span>
+            </div>
+            <h2 class="contact__title" data-reveal>一起聊聊<span class="contact__title-break">新想法</span><span class="contact__title-dot">.</span></h2>
+            <p class="contact__text" data-reveal data-reveal-delay="1">目前在北京，求职前端工程师。欢迎就机会、协作或技术问题联系我。</p>
+            <div class="contact__actions" data-reveal data-reveal-delay="2">
+              <a class="btn btn--primary contact__email" href="mailto:lyh2830@163.com">lyh2830@163.com</a>
+              <div class="contact__links"></div>
+            </div>
+          </section>
+        </main>
+
+        <footer class="site-footer">
+          <span class="footer__name">李永慧 · Yonghui Li</span>
+          <span class="footer__meta"></span>
+          <a class="footer__top" href="#top">回到顶部 ↑</a>
+        </footer>
+      </div>
     </div>
-
-    <header class="site-header">
-      <a class="logo" href="#top" data-zh>李永慧</a>
-      <nav class="nav" aria-label="主导航">
-        <a href="#about">关于</a>
-        <a href="#work">经历</a>
-        <a href="#projects">作品</a>
-        <a href="#contact">联系</a>
-      </nav>
-    </header>
-
-    <main id="top">
-      <section class="hero" aria-label="首页">
-        <div class="hero__copy">
-          <p class="hero__en" data-reveal>Yonghui Li</p>
-          <h1 class="hero__name" data-reveal data-reveal-delay="1">李永慧</h1>
-          <p class="hero__title" data-reveal data-reveal-delay="2"></p>
-          <p class="hero__tagline" data-reveal data-reveal-delay="3"></p>
-          <div class="hero__actions" data-reveal data-reveal-delay="4">
-            <a class="btn btn--primary" href="#work">查看经历</a>
-            <a class="btn btn--ghost" href="#contact">联系我</a>
-          </div>
-        </div>
-        <div class="hero__visual" aria-hidden="true" data-reveal data-reveal-delay="2">
-          <svg class="hero-mark" viewBox="0 0 640 720" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="plane" x1="80" y1="40" x2="560" y2="680" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#1F6F68" stop-opacity="0.55" />
-                <stop offset="0.55" stop-color="#2A4A52" stop-opacity="0.35" />
-                <stop offset="1" stop-color="#8FA89A" stop-opacity="0.2" />
-              </linearGradient>
-              <linearGradient id="ridge" x1="0" y1="420" x2="640" y2="620" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#14302C" stop-opacity="0.7" />
-                <stop offset="1" stop-color="#1F6F68" stop-opacity="0.25" />
-              </linearGradient>
-            </defs>
-            <rect width="640" height="720" fill="url(#plane)" />
-            <path d="M0 520 C120 470 200 560 320 500 C440 440 520 480 640 430 L640 720 L0 720 Z" fill="url(#ridge)" />
-            <path d="M0 580 C160 540 240 620 380 560 C500 510 560 540 640 510 L640 720 L0 720 Z" fill="#0F2421" fill-opacity="0.45" />
-            <circle cx="470" cy="210" r="54" fill="#E8F0EA" fill-opacity="0.55" />
-            <circle cx="470" cy="210" r="78" stroke="#E8F0EA" stroke-opacity="0.25" stroke-width="1.5" />
-            <path class="hero-mark__line" d="M90 180 C180 120 260 240 340 170 C420 100 500 150 560 120" stroke="#E8F0EA" stroke-opacity="0.45" stroke-width="1.25" />
-          </svg>
-        </div>
-      </section>
-
-      <section id="about" class="section about">
-        <div class="section__label" data-reveal>关于</div>
-        <div class="about__grid">
-          <h2 class="about__lead" data-reveal></h2>
-          <div class="about__side" data-reveal data-reveal-delay="1">
-            <p class="about__body"></p>
-            <ul class="skills" aria-label="技能"></ul>
-          </div>
-        </div>
-      </section>
-
-      <section id="work" class="section work">
-        <div class="section__label" data-reveal>经历</div>
-        <h2 class="section__title" data-reveal>走过的路</h2>
-        <ol class="timeline"></ol>
-      </section>
-
-      <section id="projects" class="section projects">
-        <div class="section__label" data-reveal>作品</div>
-        <h2 class="section__title" data-reveal>精选项目</h2>
-        <ul class="project-list"></ul>
-      </section>
-
-      <section id="contact" class="section contact">
-        <div class="section__label" data-reveal>联系</div>
-        <h2 class="contact__title" data-reveal>一起聊聊新想法</h2>
-        <p class="contact__text" data-reveal data-reveal-delay="1">
-          欢迎就协作、产品或有意思的问题写信给我。
-        </p>
-        <div class="contact__actions" data-reveal data-reveal-delay="2">
-          <a class="btn btn--primary contact__email" href="#"></a>
-          <div class="contact__links"></div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <span class="footer__name"></span>
-      <span class="footer__copy"></span>
-    </footer>
 
     <script type="module" src="/src/main.js"></script>
   </body>

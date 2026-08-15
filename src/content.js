@@ -1,73 +1,141 @@
-/** 个人主页内容 — 按需修改即可 */
+/**
+ * 个人主页内容 — 来自简历
+ *
+ * 全站唯一数据源：src/render.js 负责把这里的数据渲染到 DOM。
+ * 修改文案、经历、项目时只需编辑本文件。
+ */
 
 export const profile = {
-  nameZh: '李永辉',
+  nameZh: '李永慧',
   nameEn: 'Yonghui Li',
-  title: '产品与工程之间的建造者',
-  tagline: '关注体验、系统与长期主义，把想法落地成可用的产品。',
-  location: '中国',
-  email: 'hello@example.com',
+  title: '前端工程师 · 多端 / 低代码 / AI',
+  tagline: '把复杂的业务，收敛成上线可用的产品。',
+  subtitle: '多端统一、低代码与 AI 应用的三线落地经验，面向业务给出可执行方案并闭环上线。',
+  location: '北京',
+  phone: '15750398278',
+  email: 'lyh2830@163.com',
   links: {
-    github: 'https://github.com/',
-    linkedin: 'https://linkedin.com/',
+    github: 'https://github.com/climpea',
+    linkedin: '',
     blog: '',
   },
 }
 
+/** 走马灯关键词 */
+export const marquee = [
+  '多端统一',
+  'R2X',
+  '鸿蒙适配',
+  '低代码',
+  '飞搭',
+  'AI 助手',
+  'LangChain',
+  '微前端',
+  '性能优化',
+  '小程序',
+  'Midway BFF',
+  '组件沉淀',
+  'AEM 埋点',
+  'EventSource',
+]
+
+/** 关键成果 — 用数字讲清楚做过什么。 */
+export const stats = [
+  { value: '4', label: '端同构交付', detail: 'PC / Android / iOS / 鸿蒙' },
+  { value: '~4×', label: '页面适配提速', detail: '10+ 页面由约 2 天降至半天内' },
+  { value: '-90%', label: '上传接口耗时', detail: '大图压缩 + 性能优化' },
+  { value: '3', label: '落地方向', detail: '多端统一 / 低代码 / AI 应用' },
+]
+
 export const about = {
-  lead: '我喜欢把模糊的问题拆清楚，再用设计与工程把答案做扎实。',
-  body: '过去几年，我在产品、前端与协作系统之间来回穿梭——从需求澄清到交互落地，从接口设计到上线迭代。相信好的作品来自对细节的耐心，以及对用户真实场景的尊重。',
+  lead: '我不只做页面——拆解业务，收敛方案，推动落地，直到它稳定上线。',
+  body: '习惯从业务场景出发收敛方案：拆清多端差异、低代码边界与定制开发范围，并推动可复用组件与物料沉淀，稳定支撑多业务线迭代。主动使用 AI 工具提升研发与回归效率，同时关注方案可维护性与线上稳定性。',
 }
+
+/** 技能按方向分组，方便招聘方快速对号入座。 */
+export const skillGroups = [
+  {
+    title: '基础',
+    items: ['HTML / CSS / JavaScript', 'ES6+', 'React / Redux'],
+  },
+  {
+    title: '多端',
+    items: ['R2X 多端', '支付宝小程序', '鸿蒙适配'],
+  },
+  {
+    title: '工程与架构',
+    items: ['qiankun 微前端', 'LowCode Engine / 飞搭', 'Midway BFF', '性能优化', 'AEM 埋点'],
+  },
+  {
+    title: 'AI 应用',
+    items: ['LangChain', 'EventSource 流式输出'],
+  },
+]
 
 export const experience = [
   {
-    period: '2023 — 至今',
-    role: '高级产品工程师',
-    org: '示例科技',
-    summary: '负责核心产品线的体验与交付，推动设计系统与工程规范落地，缩短从想法到上线的周期。',
+    period: '2025.05 — 至今',
+    role: 'Web 前端工程师',
+    org: '北京三快科技有限公司（纬致芯创科技）',
+    points: [
+      '基于 R2X 一套代码分端构建，覆盖 PC / Android / iOS / 鸿蒙，10+ 页面适配耗时由约 2 天降至最多半天；',
+      '参与点金、闪购一站式、涨单宝等商家端应用，支撑中小商家 APP 矩阵与营销 / 资金类 PC 业务持续迭代；',
+      '在鸿蒙侧基于自研 Skill 完成页面级快速适配，沉淀跨端复用方案。',
+    ],
   },
   {
-    period: '2020 — 2023',
-    role: '前端工程师',
-    org: '示例工作室',
-    summary: '搭建面向创作者的工具平台，主导复杂表单与实时协作场景，优化首屏与交互流畅度。',
+    period: '2021.11 — 2025.05',
+    role: 'Web 前端工程师',
+    org: '浙江飞猪网络技术有限公司（易宝软件）',
+    points: [
+      '负责租车、接送机、汽车票等业务的中后台与 H5 / 小程序多端页面；',
+      '主导汽车票低代码建设与小二后台重构：基于飞搭（LowCode Engine）完成 CRS 相关功能建设，沉淀可复用组件 / 物料，缩短中后台交付周期；',
+      '参与机票运营后台 AI 助手：EventSource 流式输出，Midway BFF 聚合 LangChain 与私域知识库，形成可复用的 AI 接入范式；',
+      '完成环球影城支付宝小程序订单 / 退款页（多票种），兼容支付宝 / 淘宝 / 高德多端；大图上传压缩使接口耗时下降 90%，并接入 AEM 埋点提升关键行为可观测性。',
+    ],
   },
   {
-    period: '2018 — 2020',
-    role: '全栈开发',
-    org: '早期创业团队',
-    summary: '从 0 到 1 参与产品孵化，覆盖 Web 端、接口与基础运维，形成完整交付闭环。',
+    period: '2017.09 — 2021.06',
+    role: '软件工程 · 本科',
+    org: '天津商业大学',
+    points: ['系统学习软件工程与前端相关基础，为后续多端与工程化实践打下基础。'],
   },
 ]
 
 export const projects = [
   {
-    name: '协作白板',
-    year: '2024',
-    desc: '多人实时编辑的轻量白板，支持评论、版本回溯与导出。',
+    name: '中小商家 APP 矩阵多端统一',
+    org: '美团',
+    desc: 'R2X 一套代码分端构建，鸿蒙侧复用 Skill 做页面级适配，完成 PC / Android / iOS / 鸿蒙同构交付。',
+    tech: ['R2X', '鸿蒙适配', '多端同构'],
     href: '#',
   },
   {
-    name: '设计系统站点',
-    year: '2023',
-    desc: '组件文档与 Token 平台，让设计与研发共享同一套语言。',
+    name: '机票运营后台 AI 助手',
+    org: '飞猪',
+    desc: '对话式助手前端与链路联调：EventSource 流式输出，Midway BFF 聚合 LangChain 大模型与私域知识库。',
+    tech: ['EventSource', 'Midway BFF', 'LangChain'],
     href: '#',
   },
   {
-    name: '个人工具箱',
-    year: '2022',
-    desc: '日常效率小工具合集：笔记同步、快捷启动与阅读稍后读。',
+    name: '汽车票小二后台低代码重构',
+    org: '飞猪',
+    desc: '基于飞搭（LowCode Engine）主导接入方案与旧系统重构，完成 CRS 相关功能建设，沉淀可复用组件与物料。',
+    tech: ['LowCode Engine', '飞搭', '组件沉淀'],
     href: '#',
   },
-]
-
-export const skills = [
-  '产品思考',
-  '前端工程',
-  '交互设计',
-  '系统设计',
-  'TypeScript',
-  'React',
-  'Node.js',
-  '设计系统',
+  {
+    name: '环球影城度假区小程序',
+    org: '飞猪',
+    desc: '支付宝小程序订单页、退款页（多票种）开发，兼容支付宝 / 淘宝 / 高德多端，保障活动链路稳定可用。',
+    tech: ['支付宝小程序', '多端兼容'],
+    href: '#',
+  },
+  {
+    name: '租车商家 CRS 系统',
+    org: '飞猪',
+    desc: '封装公共与业务组件；大图上传前压缩使接口耗时下降 90%，并接入 AEM 埋点提升关键行为可观测性。',
+    tech: ['组件化', '性能优化', 'AEM 埋点'],
+    href: '#',
+  },
 ]
