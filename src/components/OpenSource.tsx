@@ -35,20 +35,19 @@ export function OpenSource() {
       {(ghProfile || repos) && (
         <dl className="oss__stats" aria-label="仓库概况">
           <div className="stat oss__stat">
-            <dt className="stat__value">{ghProfile?.publicRepos ?? repos?.length ?? '—'}</dt>
+            <dt className="stat__value stat__value--text">{ghProfile?.publicRepos ?? repos?.length ?? '—'}</dt>
             <dd className="stat__label">公开仓库</dd>
           </div>
           <div className="stat oss__stat">
-            <dt className="stat__value">{meta.years > 0 ? meta.years : '—'}</dt>
+            <dt className="stat__value stat__value--text">{meta.years > 0 ? `${meta.years}年` : '今年'}</dt>
             <dd className="stat__label">开源年限</dd>
-            <dd className="stat__detail">{meta.years > 0 ? '年' : '今年'}</dd>
           </div>
           <div className="stat oss__stat">
-            <dt className="stat__value">{meta.topLang || '—'}</dt>
+            <dt className="stat__value stat__value--text">{meta.topLang || '—'}</dt>
             <dd className="stat__label">主要语言</dd>
           </div>
           <div className="stat oss__stat">
-            <dt className="stat__value">{formatRelative(meta.latest) || '—'}</dt>
+            <dt className="stat__value stat__value--text">{formatRelative(meta.latest) || '—'}</dt>
             <dd className="stat__label">最近更新</dd>
           </div>
         </dl>

@@ -1,10 +1,34 @@
 {
-  "fetchedAt": "2026-08-15T06:35:04.038Z",
+  "fetchedAt": "2026-08-16T02:53:53.329Z",
   "profile": {
-    "publicRepos": 3,
+    "publicRepos": 4,
     "createdAt": "2023-09-01T03:40:16Z"
   },
   "repos": [
+    {
+      "name": "ai_lc",
+      "url": "https://github.com/climpea/ai_lc",
+      "description": "",
+      "language": "",
+      "stars": 0,
+      "forks": 0,
+      "pushedAt": "2026-08-15T07:41:41Z",
+      "archived": false,
+      "fork": false,
+      "topics": []
+    },
+    {
+      "name": "resume",
+      "url": "https://github.com/climpea/resume",
+      "description": "个人简历介绍",
+      "language": "TypeScript",
+      "stars": 0,
+      "forks": 0,
+      "pushedAt": "2026-08-15T06:37:01Z",
+      "archived": false,
+      "fork": false,
+      "topics": []
+    },
     {
       "name": "focus_training",
       "url": "https://github.com/climpea/focus_training",
@@ -31,6 +55,40 @@
     }
   ],
   "analysis": {
+    "ai_lc": {
+      "summary": "",
+      "stack": [],
+      "langbar": []
+    },
+    "resume": {
+      "summary": "基于 React 19 + TypeScript + Vite 的静态个人主页，含 WebGL「雨滴玻璃」",
+      "stack": [
+        "TypeScript",
+        "React",
+        "Vite",
+        "WebGL",
+        "Canvas",
+        "GitHub Actions"
+      ],
+      "langbar": [
+        {
+          "lang": "TypeScript",
+          "pct": 67.59808972408943
+        },
+        {
+          "lang": "CSS",
+          "pct": 23.752514596928513
+        },
+        {
+          "lang": "JavaScript",
+          "pct": 6.471713851135862
+        },
+        {
+          "lang": "HTML",
+          "pct": 2.1776818278461967
+        }
+      ]
+    },
     "focus_training": {
       "summary": "基于微信小游戏 Canvas 2D 的专注力训练应用，包含六种认知训练模块，适用于视觉搜索、抗干扰、记忆与动态感知等能力练习。",
       "stack": [

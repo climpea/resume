@@ -6,9 +6,6 @@ export function Work() {
   return (
     <section id="work" className="section work">
       <SectionHead index="02" label="经历" />
-      <h2 className="section__title" data-reveal>
-        走过的路
-      </h2>
 
       <ol className="timeline">
         {experience.map((item, i) => (

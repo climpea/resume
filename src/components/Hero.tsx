@@ -17,7 +17,7 @@ export function Hero() {
         <span className="hero__meta-dot" aria-hidden="true">·</span>
         <span>BEIJING, CN</span>
         <span className="hero__meta-dot" aria-hidden="true">·</span>
-        <span>WEB FRONT-END</span>
+        <span className="hero__meta-strong">前端开发</span>
       </div>
 
       <h1 className="hero__title">

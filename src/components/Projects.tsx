@@ -21,7 +21,6 @@ export function Projects() {
               <span className="project-card__cover" aria-hidden="true">
                 <span className="project-card__num">{String(i + 1).padStart(2, '0')}</span>
                 <span className="project-card__org">{p.org}</span>
-                <span className="project-card__arrow">↗</span>
               </span>
               <h3 className="project-card__name">{p.name}</h3>
               <p className="project-card__desc">{p.desc}</p>

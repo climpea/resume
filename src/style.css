@@ -468,6 +468,15 @@ section[id] {
   color: var(--gold);
 }
 
+/* 「前端开发」强调项：换正文无衬线栈（中文显示一致），金色加粗突出 */
+.hero__meta-strong {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--gold-strong);
+}
+
 .hero__title {
   margin: 0;
   line-height: 0.96;
@@ -782,6 +791,27 @@ section[id] {
   color: transparent;
 }
 
+/* 文本类数值（如语言名、3年、今天）：改用正文无衬线栈，
+   让拉丁数字与中文同一套字体体系（Syne 无 CJK 字形，回退宋体会导致
+   数字与中文字面高度不一致）；支持容器查询时字号随列宽自适应。 */
+.stat__value--text {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: clamp(1rem, 2.2vw, 1.6rem);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+@supports (container-type: inline-size) {
+  .oss__stats .stat {
+    container-type: inline-size;
+  }
+
+  .stat__value--text {
+    font-size: min(1.8rem, 10cqw);
+  }
+}
+
 .stat__label {
   margin: 0.6rem 0 0.3rem;
   font-size: 0.95rem;
@@ -951,18 +981,6 @@ section[id] {
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   color: var(--ink-faint);
-}
-
-.project-card__arrow {
-  position: relative;
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  color: var(--gold);
-  transition: transform 0.35s var(--ease);
-}
-
-.project-card:hover .project-card__arrow {
-  transform: translate(3px, -3px);
 }
 
 .project-card__name {

@@ -14,7 +14,6 @@ interface LinkItem {
 export function Contact() {
   const links = useMemo<LinkItem[]>(() => {
     const items: LinkItem[] = []
-    if (profile.phone) items.push({ key: 'phone', label: profile.phone, href: `tel:${profile.phone}` })
     if (profile.location) items.push({ key: 'location', label: profile.location, plain: true })
     if (profile.links.github) items.push({ key: 'github', label: 'GitHub', href: profile.links.github, external: true })
     if (profile.links.linkedin) items.push({ key: 'linkedin', label: 'LinkedIn', href: profile.links.linkedin, external: true })

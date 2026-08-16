@@ -12,7 +12,6 @@ export interface Profile {
   tagline: string
   subtitle: string
   location: string
-  phone: string
   email: string
   links: {
     github: string
@@ -28,7 +27,6 @@ export const profile: Profile = {
   tagline: '把复杂的业务，收敛成上线可用的产品。',
   subtitle: '多端统一、低代码与 AI 应用的三线落地经验，面向业务给出可执行方案并闭环上线。',
   location: '北京',
-  phone: '15750398278',
   email: 'lyh2830@163.com',
   links: {
     github: 'https://github.com/climpea',
@@ -74,7 +72,7 @@ export const github: GithubConfig = {
   username: 'climpea', // 留空则自动从 profile.links.github 解析
   excludeForks: true, // 排除 fork 仓库
   excludeArchived: true, // 排除已归档仓库
-  exclude: ['resume'], // 排除指定仓库名（如当前简历仓库本身）
+  exclude: [], // 排除指定仓库名（如不需要展示当前简历仓库时可加 'resume'）
   maxRepos: 20, // 最多展示数量
   featured: [], // 需要置顶的仓库名（可选，按顺序排最前）
   skipReadmeWhenDescribed: true, // 有完整描述（≥10 字）的仓库跳过 README 拉取，省配额
