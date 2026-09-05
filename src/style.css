@@ -716,15 +716,23 @@ section[id] {
   align-items: start;
 }
 
+/* 关于大标题：混排技术名词多，字号收敛 + 宽行距，关键词金色强调 */
 .about__lead {
   margin: 0;
-  max-width: 22em;
+  max-width: 24em;
   font-family: var(--font-serif);
-  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  font-size: clamp(1.45rem, 2.6vw, 1.95rem);
   font-weight: 600;
-  line-height: 1.45;
+  line-height: 1.75;
   letter-spacing: 0.02em;
   color: var(--ink);
+  text-wrap: balance;
+}
+
+.about__lead-hl {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--gold-strong);
 }
 
 .about__body {
@@ -732,40 +740,76 @@ section[id] {
   color: var(--ink-soft);
 }
 
-/* 技能：按方向分组 */
-.skill-groups {
+/* 自我评价 5 点：逐条分行，长文用更松的行距 */
+.about__eval {
   display: grid;
-  gap: 1.35rem;
+  gap: 0.7rem;
+  margin-bottom: 2rem;
 }
 
-.skill-group__title {
-  margin: 0 0 0.6rem;
+.about__eval .about__body {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+/* 技能特长：独立小模块，标签 + 说明 行式排版 */
+.about__skills {
+  margin-top: clamp(2.25rem, 4vw, 3rem);
+  padding-top: 1.5rem;
+}
+
+.about__skills-title {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  margin: 0 0 1.2rem;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
   color: var(--gold);
 }
 
-.skill-group__list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem 0.9rem;
+/* 标题右侧的金色延伸线，收尾淡出 */
+.about__skills-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--line-strong), transparent);
+}
+
+.about__skills-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 3rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.skill-group__list li {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--ink-soft);
+/* 每条技能：左标签（金色，不换行）+ 右说明正文 */
+.about__skill {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.55rem;
+  align-items: start;
 }
 
-.skill-group__list li::before {
-  content: '·';
-  margin-right: 0.5rem;
-  color: var(--gold);
+.about__skill-cat {
+  font-size: 0.94rem;
+  font-weight: 600;
+  line-height: 1.75;
+  letter-spacing: 0.02em;
+  color: var(--gold-strong);
+  white-space: nowrap;
+}
+
+.about__skill-desc {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.75;
+  word-break: break-word;
 }
 
 /* 关键成果条：无外框，列数随宽度自适应 */
@@ -992,26 +1036,47 @@ section[id] {
 }
 
 .project-card__desc {
-  margin: 0 0 1rem;
+  margin: 0 0 0.9rem;
   color: var(--ink-soft);
   font-size: 0.95rem;
 }
 
-.project-card__tech {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+/* 技术栈（简历原文一行） */
+.project-card__stack {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.02em;
+  line-height: 1.7;
+  color: var(--gold);
+}
+
+/* 项目职责（简历原文逐条） */
+.project-card__duties {
+  display: grid;
+  gap: 0.5rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.project-card__tech li {
-  padding: 0.16rem 0.6rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.04em;
-  color: var(--gold);
+.project-card__duties li {
+  position: relative;
+  padding-left: 1.1rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.project-card__duties li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.66em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
 }
 
 /* —— Contact —— */
@@ -1468,6 +1533,11 @@ html.js [data-reveal].is-visible {
     grid-template-columns: 1fr;
   }
 
+  .about__skills-list {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+
   .stats {
     grid-template-columns: repeat(2, 1fr);
     row-gap: 0.5rem;
@@ -1558,5 +1628,11 @@ html.js [data-reveal].is-visible {
   .timeline__period {
     grid-column: auto;
     grid-row: auto;
+  }
+
+  /* 手机端技能条目：标签上移一行，正文另起一行 */
+  .about__skill {
+    grid-template-columns: 1fr;
+    row-gap: 0.05rem;
   }
 }

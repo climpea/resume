@@ -22,11 +22,13 @@ export function Work() {
             <div className="timeline__body">
               <h3 className="timeline__role">{item.role}</h3>
               <p className="timeline__org">{item.org}</p>
-              <ul className="timeline__points">
-                {item.points.map((point, j) => (
-                  <li key={j}>{point}</li>
-                ))}
-              </ul>
+              {item.points.length > 0 && (
+                <ul className="timeline__points">
+                  {item.points.map((point, j) => (
+                    <li key={j}>{point}</li>
+                  ))}
+                </ul>
+              )}
             </div>
           </li>
         ))}

@@ -1,4 +1,4 @@
-/** 精选项目：卡片网格 */
+/** 精选项目：卡片网格（内容为简历原文：描述 / 技术栈 / 职责逐条） */
 import { projects } from '../content'
 import { SectionHead } from './SectionHead'
 
@@ -13,25 +13,22 @@ export function Projects() {
       <ul className="project-grid">
         {projects.map((p, i) => (
           <li data-reveal data-reveal-delay={String(Math.min(i % 2, 2))} key={p.name}>
-            <a
-              className="project-card"
-              href={p.href}
-              {...(p.href !== '#' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-            >
+            <article className="project-card">
               <span className="project-card__cover" aria-hidden="true">
                 <span className="project-card__num">{String(i + 1).padStart(2, '0')}</span>
                 <span className="project-card__org">{p.org}</span>
               </span>
               <h3 className="project-card__name">{p.name}</h3>
               <p className="project-card__desc">{p.desc}</p>
-              {p.tech.length > 0 && (
-                <ul className="project-card__tech">
-                  {p.tech.map((t) => (
-                    <li key={t}>{t}</li>
+              {p.stack && <p className="project-card__stack">技术栈：{p.stack}</p>}
+              {p.duties.length > 0 && (
+                <ul className="project-card__duties">
+                  {p.duties.map((duty, j) => (
+                    <li key={j}>{duty}</li>
                   ))}
                 </ul>
               )}
-            </a>
+            </article>
           </li>
         ))}
       </ul>

@@ -1,18 +1,18 @@
 {
-  "fetchedAt": "2026-08-16T02:53:53.329Z",
+  "fetchedAt": "2026-09-05T03:18:27.950Z",
   "profile": {
-    "publicRepos": 4,
+    "publicRepos": 6,
     "createdAt": "2023-09-01T03:40:16Z"
   },
   "repos": [
     {
-      "name": "ai_lc",
-      "url": "https://github.com/climpea/ai_lc",
-      "description": "",
-      "language": "",
+      "name": "pith_cli",
+      "url": "https://github.com/climpea/pith_cli",
+      "description": "一个命令搞定高频 Git 工作流：`add + commit + push`、`pull --rebase + push`、分支创建/切换、交互式挑选提交、暂存同步、分支清理等。支持通过配置文件**自定义组合命令**，零依赖，兼容 **Node.js 14+**。",
+      "language": "JavaScript",
       "stars": 0,
       "forks": 0,
-      "pushedAt": "2026-08-15T07:41:41Z",
+      "pushedAt": "2026-08-17T11:38:14Z",
       "archived": false,
       "fork": false,
       "topics": []
@@ -24,10 +24,43 @@
       "language": "TypeScript",
       "stars": 0,
       "forks": 0,
-      "pushedAt": "2026-08-15T06:37:01Z",
+      "pushedAt": "2026-08-17T08:21:03Z",
       "archived": false,
       "fork": false,
       "topics": []
+    },
+    {
+      "name": "daily-interview-skill",
+      "url": "https://github.com/climpea/daily-interview-skill",
+      "description": "每天 **08:00 自动生成**一套完整的「高级前端开发」大厂风格面试题（对标 P6/P7）",
+      "language": "JavaScript",
+      "stars": 0,
+      "forks": 0,
+      "pushedAt": "2026-08-16T14:36:51Z",
+      "archived": false,
+      "fork": false,
+      "topics": []
+    },
+    {
+      "name": "daily-news-digest",
+      "url": "https://github.com/climpea/daily-news-digest",
+      "description": "聚合 7 个权威源（Hacker News、GitHub、HuggingFace、arXiv、掘金、OSCHINA、 InfoQ），用 AI 生成中文 Markdown 开发者日报，并附带基于当日热点的 「🎯 学习成长计划」与「🛠️ 落地练手 Idea」。纯 Skill 即可用 （SKILL.md 内置手动采集命令）；在 DSH 中配合动态插件可实现每天 09:00 自动生成 + 落盘。",
+      "language": "JavaScript",
+      "stars": 0,
+      "forks": 0,
+      "pushedAt": "2026-08-16T05:54:45Z",
+      "archived": false,
+      "fork": false,
+      "topics": [
+        "agent-skill",
+        "ai-agent",
+        "automation",
+        "claude-skill",
+        "daily-digest",
+        "developer-tools",
+        "dsh-plugin",
+        "hacker-news"
+      ]
     },
     {
       "name": "focus_training",
@@ -55,10 +88,48 @@
     }
   ],
   "analysis": {
-    "ai_lc": {
-      "summary": "",
-      "stack": [],
-      "langbar": []
+    "pith_cli": {
+      "summary": "一个命令搞定高频 Git 工作流：`add + commit + push`、`pull --rebase + push`、分支创建/切换、交互式挑选提交、暂存同步、分支清理等。支持通过配置文件**自定义组合命令**，零依赖，兼容 **Node.js 14+**。",
+      "stack": [
+        "JavaScript"
+      ],
+      "langbar": [
+        {
+          "lang": "JavaScript",
+          "pct": 100
+        }
+      ]
+    },
+    "daily-interview-skill": {
+      "summary": "每天 **08:00 自动生成**一套完整的「高级前端开发」大厂风格面试题（对标 P6/P7）",
+      "stack": [
+        "JavaScript"
+      ],
+      "langbar": [
+        {
+          "lang": "JavaScript",
+          "pct": 100
+        }
+      ]
+    },
+    "daily-news-digest": {
+      "summary": "聚合 7 个权威源（Hacker News、GitHub、HuggingFace、arXiv、掘金、OSCHINA、 InfoQ），用 AI 生成中文 Markdown 开发者日报，并附带基于当日热点的 「🎯 学习成长计划」与「🛠️ 落地练手 Idea」。纯 Skill 即可用 （SKILL.md 内置手动采集命令）；在 DSH 中配合动态插件可实现每天 09:00 自动生成 + 落盘。",
+      "stack": [
+        "JavaScript",
+        "agent-skill",
+        "ai-agent",
+        "automation",
+        "claude-skill",
+        "daily-digest",
+        "developer-tools",
+        "dsh-plugin"
+      ],
+      "langbar": [
+        {
+          "lang": "JavaScript",
+          "pct": 100
+        }
+      ]
     },
     "resume": {
       "summary": "基于 React 19 + TypeScript + Vite 的静态个人主页，含 WebGL「雨滴玻璃」",
@@ -73,19 +144,19 @@
       "langbar": [
         {
           "lang": "TypeScript",
-          "pct": 67.59808972408943
+          "pct": 67.21743314548554
         },
         {
           "lang": "CSS",
-          "pct": 23.752514596928513
+          "pct": 24.18914179926111
         },
         {
           "lang": "JavaScript",
-          "pct": 6.471713851135862
+          "pct": 6.454243701933664
         },
         {
           "lang": "HTML",
-          "pct": 2.1776818278461967
+          "pct": 2.1391813533196866
         }
       ]
     },
